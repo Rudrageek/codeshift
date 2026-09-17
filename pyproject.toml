@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "codeshift"
+version = "0.1.0"
+description = "AI-assisted code migration and static analysis tool"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "tree-sitter",
+    "tree-sitter-javascript",
+    "typer",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+]
+
+[project.scripts]
+codeshift = "codeshift.cli:app"
+
+[tool.setuptools.packages.find]
+where = ["src"]
