@@ -45,9 +45,9 @@ def analyze(
 ):
     """Analyze a JavaScript source code file."""
 
-    # -------------------------
+    # ---------------------------------
     # Read source file
-    # -------------------------
+    # ---------------------------------
 
     try:
 
@@ -69,9 +69,9 @@ def analyze(
             code=1
         )
 
-    # -------------------------
+    # ---------------------------------
     # Parse JavaScript
-    # -------------------------
+    # ---------------------------------
 
     tree = parse_javascript(
         source_code
@@ -85,9 +85,9 @@ def analyze(
         f"Root node: {tree.root_node.type}"
     )
 
-    # -------------------------
+    # ---------------------------------
     # Print AST
-    # -------------------------
+    # ---------------------------------
 
     typer.echo(
         "\nAST:"
@@ -97,9 +97,9 @@ def analyze(
         tree
     )
 
-    # -------------------------
-    # Static analysis
-    # -------------------------
+    # ---------------------------------
+    # Static Analysis
+    # ---------------------------------
 
     results = analyze_javascript(
         tree
@@ -121,11 +121,11 @@ def analyze(
 
         return
 
-    for result in results:
+    # ---------------------------------
+    # Display analysis results
+    # ---------------------------------
 
-        # -------------------------
-        # Function information
-        # -------------------------
+    for result in results:
 
         typer.echo(
             f"Function: "
@@ -147,10 +147,6 @@ def analyze(
             f"{result['operation']}"
         )
 
-        # -------------------------
-        # Inferred return type
-        # -------------------------
-
         typer.echo(
             f"Inferred return type: "
             f"{result['inferred_type']} "
@@ -158,18 +154,10 @@ def analyze(
             f"{result['confidence']})"
         )
 
-        # -------------------------
-        # Evidence
-        # -------------------------
-
         typer.echo(
             f"Evidence: "
             f"{result['evidence']}"
         )
-
-        # -------------------------
-        # Migration suggestions
-        # -------------------------
 
         if result["suggestions"]:
 
@@ -197,9 +185,9 @@ def analyze(
             "────────────────────────"
         )
 
-    # -------------------------
-    # TypeScript transformation
-    # -------------------------
+    # ---------------------------------
+    # Transform JavaScript → TypeScript
+    # ---------------------------------
 
     transformed_code = (
         transform_to_typescript(
@@ -208,9 +196,9 @@ def analyze(
         )
     )
 
-    # -------------------------
-    # TypeScript validation
-    # -------------------------
+    # ---------------------------------
+    # Complete TypeScript Validation
+    # ---------------------------------
 
     validation = validate_typescript(
         transformed_code
@@ -224,33 +212,88 @@ def analyze(
         "────────────────────────"
     )
 
-    if validation["valid"]:
+    # ---------------------------------
+    # Syntax Validation
+    # ---------------------------------
+
+    if validation["syntax_valid"]:
 
         typer.echo(
-            "✓ Generated TypeScript "
-            "is syntactically valid."
+            "Syntax:      ✓ Valid"
         )
 
     else:
 
         typer.echo(
-            "✗ Generated TypeScript "
-            "contains syntax errors."
+            "Syntax:      ✗ Invalid"
         )
 
-        for error in validation["errors"]:
+        for error in validation[
+            "syntax_errors"
+        ]:
 
             typer.echo(
                 f"  - {error}"
             )
 
+    # ---------------------------------
+    # Semantic Validation
+    # ---------------------------------
+
+    if validation["semantic_valid"]:
+
+        typer.echo(
+            "TypeScript:  ✓ Valid"
+        )
+
+        typer.echo(
+            "Type errors: 0"
+        )
+
+    else:
+
+        typer.echo(
+            "TypeScript:  ✗ Invalid"
+        )
+
+        semantic_errors = validation[
+            "semantic_errors"
+        ]
+
+        typer.echo(
+            f"Type errors: "
+            f"{len(semantic_errors)}"
+        )
+
+        for error in semantic_errors:
+
+            typer.echo(
+                f"  - {error}"
+            )
+
+    # ---------------------------------
+    # Overall Validation
+    # ---------------------------------
+
+    if validation["valid"]:
+
+        typer.echo(
+            "\n✓ Migration validated successfully."
+        )
+
+    else:
+
+        typer.echo(
+            "\n✗ Migration requires attention."
+        )
+
     typer.echo(
         "────────────────────────"
     )
 
-    # -------------------------
-    # TypeScript output
-    # -------------------------
+    # ---------------------------------
+    # TypeScript Output
+    # ---------------------------------
 
     typer.echo(
         "\nTypeScript Output:"
@@ -268,9 +311,9 @@ def analyze(
         "────────────────────────"
     )
 
-    # -------------------------
-    # Write output file
-    # -------------------------
+    # ---------------------------------
+    # Save output file
+    # ---------------------------------
 
     if output:
 
